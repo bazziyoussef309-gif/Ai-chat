@@ -437,17 +437,32 @@ function send(){
 
   showTyping();
 
-  setTimeout(function(){
+  fetch("https://nova-ai-api.bazziyoussef309.workers.dev", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    message: text
+  })
+})
+.then(response => response.json())
+.then(data => {
 
-    removeTyping();
+  removeTyping();
 
-    const answer=getAnswer(text);
+  addMessage(data.reply || "ما وصلني جواب.", "ai");
 
-    addMessage(answer,"ai");
+  saveHistory(text);
 
-    saveHistory(text);
+})
+.catch(error => {
 
-  },900);
+  removeTyping();
+
+  addMessage("صار خطأ بالاتصال بالـAI.", "ai");
+
+});
 
 }
 
