@@ -1,385 +1,321 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nova AI</title>
 
-  <title>Nova AI</title>
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+body{
+  font-family:Arial,sans-serif;
+  background:#0b0d12;
+  color:#fff;
+  height:100vh;
+  overflow:hidden;
+}
 
-    :root {
-      --bg: #0b0d12;
-      --sidebar: #11141b;
-      --card: #171a22;
-      --border: #272c38;
-      --text: #f5f7fa;
-      --muted: #9299a8;
-      --accent: #7c5cff;
-      --accent2: #9b87ff;
-    }
+.app{
+  display:flex;
+  height:100vh;
+}
 
-    body {
-      font-family: Arial, Helvetica, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      height: 100vh;
-      overflow: hidden;
-    }
+/* SIDEBAR */
 
-    .app {
-      display: flex;
-      height: 100vh;
-    }
+.sidebar{
+  width:250px;
+  background:#11141b;
+  border-right:1px solid #272c38;
+  padding:18px;
+}
 
-    /* SIDEBAR */
+.logo{
+  font-size:24px;
+  font-weight:bold;
+  margin-bottom:25px;
+}
 
-    .sidebar {
-      width: 260px;
-      background: var(--sidebar);
-      border-right: 1px solid var(--border);
-      padding: 18px;
-      display: flex;
-      flex-direction: column;
-    }
+.logo span{
+  color:#8b6cff;
+}
 
-    .logo {
-      font-size: 23px;
-      font-weight: bold;
-      margin-bottom: 25px;
-    }
+.new-chat{
+  width:100%;
+  padding:13px;
+  border:1px solid #303644;
+  background:#191d26;
+  color:white;
+  border-radius:10px;
+  cursor:pointer;
+  margin-bottom:25px;
+}
 
-    .logo span {
-      color: var(--accent2);
-    }
+.new-chat:hover{
+  background:#242936;
+}
 
-    .new-chat {
-      width: 100%;
-      padding: 13px;
-      border: 1px solid var(--border);
-      background: var(--card);
-      color: white;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 15px;
-      margin-bottom: 20px;
-    }
+.history-title{
+  color:#7f8797;
+  font-size:12px;
+  margin-bottom:10px;
+}
 
-    .new-chat:hover {
-      background: #202532;
-    }
+.history{
+  padding:10px;
+  border-radius:8px;
+  color:#c8ccd5;
+  font-size:14px;
+  cursor:pointer;
+}
 
-    .history-title {
-      color: var(--muted);
-      font-size: 12px;
-      margin-bottom: 10px;
-      text-transform: uppercase;
-    }
+.history:hover{
+  background:#1b202a;
+}
 
-    .history {
-      color: #c5cad4;
-      font-size: 14px;
-      padding: 10px;
-      border-radius: 8px;
-      cursor: pointer;
-    }
+/* MAIN */
 
-    .history:hover {
-      background: var(--card);
-    }
+.main{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+}
 
-    .sidebar-bottom {
-      margin-top: auto;
-      color: var(--muted);
-      font-size: 13px;
-      padding: 10px;
-    }
+.topbar{
+  height:60px;
+  border-bottom:1px solid #272c38;
+  display:flex;
+  align-items:center;
+  padding:0 20px;
+  font-weight:bold;
+}
 
-    /* MAIN */
+#chat{
+  flex:1;
+  overflow-y:auto;
+  padding:30px 15px 120px;
+}
 
-    .main {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      min-width: 0;
-    }
+/* WELCOME */
 
-    .topbar {
-      height: 65px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      padding: 0 22px;
-      font-weight: bold;
-    }
+.welcome{
+  max-width:700px;
+  margin:12vh auto;
+  text-align:center;
+}
 
-    .mobile-logo {
-      display: none;
-    }
+.icon{
+  width:65px;
+  height:65px;
+  margin:auto;
+  border-radius:20px;
+  background:linear-gradient(135deg,#7655ff,#a48cff);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:32px;
+}
 
-    /* CHAT */
+.welcome h1{
+  margin-top:20px;
+  font-size:36px;
+}
 
-    #chat {
-      flex: 1;
-      overflow-y: auto;
-      padding: 30px 20px 120px;
-      scroll-behavior: smooth;
-    }
+.welcome p{
+  color:#8d95a5;
+  margin-top:10px;
+}
 
-    .welcome {
-      max-width: 750px;
-      margin: 13vh auto 0;
-      text-align: center;
-    }
+.suggestions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-top:35px;
+}
 
-    .ai-icon {
-      width: 65px;
-      height: 65px;
-      border-radius: 20px;
-      background: linear-gradient(135deg, #7c5cff, #a78bfa);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin: auto;
-      font-size: 31px;
-      box-shadow: 0 10px 35px rgba(124, 92, 255, 0.25);
-    }
+.suggestion{
+  padding:18px;
+  background:#171a22;
+  border:1px solid #292e3a;
+  border-radius:12px;
+  cursor:pointer;
+  text-align:left;
+}
 
-    .welcome h1 {
-      margin-top: 22px;
-      font-size: 36px;
-    }
+.suggestion:hover{
+  border-color:#7c5cff;
+}
 
-    .welcome p {
-      color: var(--muted);
-      margin-top: 10px;
-    }
+/* MESSAGES */
 
-    .suggestions {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-      margin-top: 35px;
-    }
+.message{
+  max-width:800px;
+  margin:0 auto 25px;
+  display:flex;
+  gap:12px;
+  line-height:1.6;
+}
 
-    .suggestion {
-      background: var(--card);
-      border: 1px solid var(--border);
-      padding: 17px;
-      border-radius: 12px;
-      color: #d7dbe3;
-      cursor: pointer;
-      text-align: left;
-      transition: 0.2s;
-    }
+.avatar{
+  min-width:36px;
+  height:36px;
+  border-radius:10px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
 
-    .suggestion:hover {
-      border-color: var(--accent);
-      transform: translateY(-2px);
-    }
+.user-avatar{
+  background:#303542;
+}
 
-    /* MESSAGES */
+.ai-avatar{
+  background:linear-gradient(135deg,#7655ff,#a48cff);
+}
 
-    .message {
-      max-width: 800px;
-      margin: 0 auto 25px;
-      display: flex;
-      gap: 13px;
-      line-height: 1.6;
-    }
+.content{
+  padding-top:5px;
+  white-space:pre-wrap;
+  word-break:break-word;
+}
 
-    .avatar {
-      min-width: 35px;
-      height: 35px;
-      border-radius: 10px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 16px;
-    }
+.name{
+  font-size:13px;
+  font-weight:bold;
+  margin-bottom:4px;
+}
 
-    .user-avatar {
-      background: #303541;
-    }
+.ai-name{
+  color:#9b87ff;
+}
 
-    .ai-avatar {
-      background: linear-gradient(135deg, #7c5cff, #9b87ff);
-    }
+/* INPUT */
 
-    .message-content {
-      padding-top: 5px;
-      white-space: pre-wrap;
-      word-break: break-word;
-    }
+.input-area{
+  position:fixed;
+  bottom:0;
+  left:250px;
+  right:0;
+  padding:15px 20px;
+  background:linear-gradient(transparent,#0b0d12 35%);
+}
 
-    .user-name,
-    .ai-name {
-      font-weight: bold;
-      font-size: 13px;
-      margin-bottom: 3px;
-    }
+.input-box{
+  max-width:800px;
+  margin:auto;
+  display:flex;
+  padding:7px;
+  background:#171a22;
+  border:1px solid #303644;
+  border-radius:15px;
+}
 
-    .user-name {
-      color: #d4d8e0;
-    }
+input{
+  flex:1;
+  background:transparent;
+  border:none;
+  outline:none;
+  color:white;
+  padding:13px;
+  font-size:15px;
+}
 
-    .ai-name {
-      color: var(--accent2);
-    }
+button.send{
+  width:45px;
+  height:45px;
+  border:none;
+  border-radius:11px;
+  background:#7655ff;
+  color:white;
+  font-size:20px;
+  cursor:pointer;
+}
 
-    /* INPUT */
+button.send:hover{
+  background:#6847ef;
+}
 
-    .input-container {
-      position: fixed;
-      bottom: 0;
-      left: 260px;
-      right: 0;
-      padding: 20px;
-      background: linear-gradient(
-        transparent,
-        var(--bg) 35%
-      );
-    }
+.disclaimer{
+  text-align:center;
+  color:#606878;
+  font-size:10px;
+  margin-top:7px;
+}
 
-    .input-wrapper {
-      max-width: 800px;
-      margin: auto;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      display: flex;
-      align-items: center;
-      padding: 8px;
-      box-shadow: 0 8px 35px rgba(0,0,0,0.25);
-    }
+/* TYPING */
 
-    #messageInput {
-      flex: 1;
-      background: transparent;
-      border: none;
-      outline: none;
-      color: white;
-      padding: 13px;
-      font-size: 15px;
-    }
+.typing{
+  display:flex;
+  gap:5px;
+  padding-top:10px;
+}
 
-    #messageInput::placeholder {
-      color: #737b8b;
-    }
+.typing span{
+  width:7px;
+  height:7px;
+  background:#888;
+  border-radius:50%;
+  animation:bounce 1s infinite;
+}
 
-    #sendBtn {
-      width: 44px;
-      height: 44px;
-      border: none;
-      border-radius: 12px;
-      background: var(--accent);
-      color: white;
-      font-size: 18px;
-      cursor: pointer;
-    }
+.typing span:nth-child(2){
+  animation-delay:.15s;
+}
 
-    #sendBtn:hover {
-      background: #6947f0;
-    }
+.typing span:nth-child(3){
+  animation-delay:.3s;
+}
 
-    .disclaimer {
-      text-align: center;
-      color: #656c7a;
-      font-size: 11px;
-      margin-top: 8px;
-    }
+@keyframes bounce{
+  0%,100%{
+    opacity:.3;
+    transform:translateY(0);
+  }
+  50%{
+    opacity:1;
+    transform:translateY(-4px);
+  }
+}
 
-    /* TYPING */
+/* MOBILE */
 
-    .typing {
-      display: flex;
-      gap: 5px;
-      padding-top: 12px;
-    }
+@media(max-width:700px){
 
-    .typing span {
-      width: 7px;
-      height: 7px;
-      background: #858c9b;
-      border-radius: 50%;
-      animation: typing 1s infinite;
-    }
+  .sidebar{
+    display:none;
+  }
 
-    .typing span:nth-child(2) {
-      animation-delay: .15s;
-    }
+  .input-area{
+    left:0;
+    padding:12px;
+  }
 
-    .typing span:nth-child(3) {
-      animation-delay: .3s;
-    }
+  .welcome{
+    margin-top:10vh;
+  }
 
-    @keyframes typing {
-      0%, 60%, 100% {
-        opacity: .3;
-        transform: translateY(0);
-      }
+  .welcome h1{
+    font-size:28px;
+  }
 
-      30% {
-        opacity: 1;
-        transform: translateY(-4px);
-      }
-    }
+  .suggestions{
+    grid-template-columns:1fr;
+  }
 
-    /* MOBILE */
-
-    @media (max-width: 700px) {
-
-      .sidebar {
-        display: none;
-      }
-
-      .mobile-logo {
-        display: block;
-      }
-
-      .topbar {
-        justify-content: center;
-      }
-
-      .input-container {
-        left: 0;
-        padding: 12px;
-      }
-
-      #chat {
-        padding-left: 12px;
-        padding-right: 12px;
-      }
-
-      .welcome {
-        margin-top: 12vh;
-      }
-
-      .welcome h1 {
-        font-size: 28px;
-      }
-
-      .suggestions {
-        grid-template-columns: 1fr;
-      }
-
-      .message {
-        max-width: 100%;
-      }
-    }
-  </style>
+  .message{
+    max-width:100%;
+  }
+}
+</style>
 </head>
 
 <body>
 
 <div class="app">
-
-  <!-- SIDEBAR -->
 
   <aside class="sidebar">
 
@@ -388,68 +324,53 @@
     </div>
 
     <button class="new-chat" onclick="newChat()">
-      + New chat
+      + New Chat
     </button>
 
     <div class="history-title">
-      Recent chats
+      Recent Chats
     </div>
 
     <div id="history"></div>
 
-    <div class="sidebar-bottom">
-      Nova AI v1.0
-    </div>
-
   </aside>
 
-
-  <!-- MAIN -->
 
   <main class="main">
 
     <header class="topbar">
-      <div class="mobile-logo">
-        Nova <span style="color:#9b87ff;">AI</span>
-      </div>
+      Nova AI
     </header>
-
-
-    <!-- CHAT -->
 
     <section id="chat">
 
       <div class="welcome" id="welcome">
 
-        <div class="ai-icon">
-          ✦
-        </div>
+        <div class="icon">✦</div>
 
         <h1>How can I help you?</h1>
 
-        <p>
-          Ask Nova AI anything.
-        </p>
+        <p>Ask Nova AI anything.</p>
 
         <div class="suggestions">
 
           <div class="suggestion"
-               onclick="useSuggestion('Explain artificial intelligence simply')">
+          onclick="suggest('Explain artificial intelligence simply')">
             💡 Explain something
           </div>
 
           <div class="suggestion"
-               onclick="useSuggestion('Help me write a professional email')">
+          onclick="suggest('Help me write an email')">
             ✍️ Write something
           </div>
 
           <div class="suggestion"
-               onclick="useSuggestion('Give me a programming idea')">
+          onclick="suggest('Give me a programming idea')">
             💻 Programming
           </div>
 
           <div class="suggestion"
-               onclick="useSuggestion('Help me study for an exam')">
+          onclick="suggest('Help me study')">
             📚 Study help
           </div>
 
@@ -460,13 +381,321 @@
     </section>
 
 
-    <!-- INPUT -->
+    <div class="input-area">
 
-    <div class="input-container">
-
-      <div class="input-wrapper">
+      <div class="input-box">
 
         <input
-          id="messageInput"
-          type="text"
-          placeholder="Message Nova AI..."
+        id="input"
+        type="text"
+        placeholder="Message Nova AI..."
+        autocomplete="off">
+
+        <button class="send" onclick="send()">
+          ↑
+        </button>
+
+      </div>
+
+      <div class="disclaimer">
+        Nova AI can make mistakes.
+      </div>
+
+    </div>
+
+  </main>
+
+</div>
+
+
+<script>
+
+const input=document.getElementById("input");
+const chat=document.getElementById("chat");
+const welcome=document.getElementById("welcome");
+
+input.addEventListener("keydown",function(e){
+
+  if(e.key==="Enter"){
+    send();
+  }
+
+});
+
+
+function send(){
+
+  const text=input.value.trim();
+
+  if(!text)return;
+
+  welcome.style.display="none";
+
+  addMessage(text,"user");
+
+  input.value="";
+
+  showTyping();
+
+  setTimeout(function(){
+
+    removeTyping();
+
+    const answer=getAnswer(text);
+
+    addMessage(answer,"ai");
+
+    saveHistory(text);
+
+  },900);
+
+}
+
+
+function addMessage(text,type){
+
+  const div=document.createElement("div");
+
+  div.className="message";
+
+  if(type==="user"){
+
+    div.innerHTML=`
+
+      <div class="avatar user-avatar">
+        👤
+      </div>
+
+      <div class="content">
+
+        <div class="name">
+          You
+        </div>
+
+        ${safe(text)}
+
+      </div>
+    `;
+
+  }else{
+
+    div.innerHTML=`
+
+      <div class="avatar ai-avatar">
+        ✦
+      </div>
+
+      <div class="content">
+
+        <div class="name ai-name">
+          Nova AI
+        </div>
+
+        ${safe(text)}
+
+      </div>
+    `;
+
+  }
+
+  chat.appendChild(div);
+
+  chat.scrollTop=chat.scrollHeight;
+
+}
+
+
+function showTyping(){
+
+  const div=document.createElement("div");
+
+  div.className="message";
+  div.id="typing";
+
+  div.innerHTML=`
+
+    <div class="avatar ai-avatar">
+      ✦
+    </div>
+
+    <div class="content">
+
+      <div class="name ai-name">
+        Nova AI
+      </div>
+
+      <div class="typing">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+
+    </div>
+  `;
+
+  chat.appendChild(div);
+
+  chat.scrollTop=chat.scrollHeight;
+
+}
+
+
+function removeTyping(){
+
+  const typing=document.getElementById("typing");
+
+  if(typing){
+    typing.remove();
+  }
+
+}
+
+
+function getAnswer(text){
+
+  const t=text.toLowerCase();
+
+  if(
+    t.includes("hello") ||
+    t.includes("hi") ||
+    t.includes("مرحبا") ||
+    t.includes("hey")
+  ){
+
+    return "Hello 👋 I'm Nova AI. How can I help you?";
+
+  }
+
+
+  if(t.includes("python")){
+
+    return "Python is a programming language known for its simple syntax. It is commonly used in AI, automation, cybersecurity, data analysis and web development.";
+
+  }
+
+
+  if(t.includes("javascript")){
+
+    return "JavaScript is a programming language that makes websites interactive. It can also be used to build web applications and servers.";
+
+  }
+
+
+  if(
+    t.includes("artificial intelligence") ||
+    t.includes("what is ai") ||
+    t.includes("الذكاء الاصطناعي")
+  ){
+
+    return "Artificial Intelligence (AI) is technology that allows computers to perform tasks that normally require human-like abilities, such as understanding language, recognizing patterns and generating content.";
+
+  }
+
+
+  if(t.includes("help")){
+
+    return "Of course! I can help with programming, studying, writing, explanations and many other topics.";
+
+  }
+
+
+  return "I received your message:\n\n\"" +
+         text +
+         "\"\n\nNova AI is currently in demo mode. The next step is connecting this interface to a real AI model.";
+
+}
+
+
+function suggest(text){
+
+  input.value=text;
+
+  send();
+
+}
+
+
+function newChat(){
+
+  chat.innerHTML="";
+
+  chat.appendChild(welcome);
+
+  welcome.style.display="block";
+
+  input.focus();
+
+}
+
+
+function saveHistory(text){
+
+  let history=
+    JSON.parse(localStorage.getItem("novaHistory")) || [];
+
+  history.unshift(text);
+
+  history=history.slice(0,8);
+
+  localStorage.setItem(
+    "novaHistory",
+    JSON.stringify(history)
+  );
+
+  loadHistory();
+
+}
+
+
+function loadHistory(){
+
+  const box=document.getElementById("history");
+
+  box.innerHTML="";
+
+  let history=
+    JSON.parse(localStorage.getItem("novaHistory")) || [];
+
+  history.forEach(function(text){
+
+    const item=document.createElement("div");
+
+    item.className="history";
+
+    item.textContent=
+      text.length>30
+      ? text.substring(0,30)+"..."
+      : text;
+
+    item.onclick=function(){
+
+      input.value=text;
+      input.focus();
+
+    };
+
+    box.appendChild(item);
+
+  });
+
+}
+
+
+function safe(text){
+
+  return text
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+
+}
+
+
+loadHistory();
+
+</script>
+
+</body>
+</html>
